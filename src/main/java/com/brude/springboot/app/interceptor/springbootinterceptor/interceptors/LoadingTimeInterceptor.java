@@ -1,5 +1,6 @@
 package com.brude.springboot.app.interceptor.springbootinterceptor.interceptors;
 
+import java.util.Random;
 import java.util.logging.Handler;
 
 import org.slf4j.Logger;
@@ -21,7 +22,11 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
-              logger.info("LoadingTimeInterceptor: postHandle() saliendo" + ((HandlerMethod) handler).getMethod().getName());      
+              logger.info("LoadingTimeInterceptor: postHandle() saliendo" + ((HandlerMethod) handler).getMethod().getName()); 
+              long end = System.currentTimeMillis();
+              long start = (long) request.getAttribute("start");
+              long result = end - start;
+              logger.info("Tiempo transcurrido: " + result + " milisegundos");
     }
 
     @Override
@@ -29,6 +34,12 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
             throws Exception {
                 HandlerMethod metodo = ((HandlerMethod)handler);
                 logger.info("LoadingTimeInterceptor: preHandle() called...."+ metodo.getMethod().getName());
+                long start = System.currentTimeMillis();
+                request.setAttribute("start", start);
+                Random random = new Random();
+                int delay = random.nextInt(500);
+                Thread.sleep(delay);
+
                 return true;
     }
 
