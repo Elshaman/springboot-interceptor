@@ -1,8 +1,11 @@
 package com.brude.springboot.app.interceptor.springbootinterceptor.interceptors;
 
+import java.util.logging.Handler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,13 +21,15 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
             ModelAndView modelAndView) throws Exception {
-              logger.info("LoadingTimeInterceptor: postHandle() saliendo");      
+              logger.info("LoadingTimeInterceptor: postHandle() saliendo" + ((HandlerMethod) handler).getMethod().getName());      
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-       logger.info("LoadingTimeInterceptor: preHandle() called");
+                HandlerMethod metodo = ((HandlerMethod)handler);
+                logger.info("LoadingTimeInterceptor: preHandle() called...."+ metodo.getMethod().getName());
+                return true;
     }
 
 
