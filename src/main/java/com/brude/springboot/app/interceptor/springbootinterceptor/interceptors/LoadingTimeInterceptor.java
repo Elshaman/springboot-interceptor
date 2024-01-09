@@ -1,5 +1,8 @@
 package com.brude.springboot.app.interceptor.springbootinterceptor.interceptors;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Handler;
 
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,7 +45,19 @@ public class LoadingTimeInterceptor implements HandlerInterceptor {
                 int delay = random.nextInt(500);
                 Thread.sleep(delay);
 
-                return true;
+                //en caso de retornar false: 
+                Map<String,String> resultado = new HashMap<String,String>();
+                resultado.put("error", "no tiene acceso a la pagina");
+                resultado.put("date" , new Date().toString());
+
+                ObjectMapper maper = new ObjectMapper();
+                String jsoString = maper.writeValueAsString(resultado);
+                response.setContentType("application/json");
+                response.setStatus(401);
+                response.getWriter().write(jsoString);
+
+                return false;
+               // return true;
     }
 
 
